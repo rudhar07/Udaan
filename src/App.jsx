@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import SearchForm from './components/SearchForm.jsx';
 import DestinationCard from './components/DestinationCard.jsx';
 import FlightResults from './components/FlightResults.jsx';
 import Layout from './components/Layout.jsx';
+import FavoritesPage from './pages/FavoritesPage.jsx';
+import { useFlightContext } from './context/FlightContext.jsx';
 
-// Sample destination data
+/**
+ * Sample destination data for the home page
+ */
 const popularDestinations = [
   {
     id: 1,
@@ -33,10 +37,17 @@ const popularDestinations = [
   }
 ];
 
-// Home page content
+/**
+ * HomePage - Main landing page with search form and popular destinations
+ */
 function HomePage() {
   const navigate = useNavigate();
+  const { popularRoutes } = useFlightContext();
   
+  /**
+   * Handle search form submission
+   * @param {Object} params - Search parameters
+   */
   const handleSearch = (params) => {
     // Navigate to flight results page with search params
     const searchQueryString = new URLSearchParams({
@@ -72,12 +83,15 @@ function HomePage() {
   );
 }
 
-// Results page that takes search params from URL
+/**
+ * FlightResultsPage - Page that displays flight search results
+ * Extracts search parameters from URL and passes them to FlightResults component
+ */
 function FlightResultsPage() {
   const [searchParams, setSearchParams] = useState(null);
   
   // Extract search params from URL on component mount
-  useState(() => {
+  useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const params = {
       from: urlParams.get('from'),
@@ -105,6 +119,9 @@ function FlightResultsPage() {
   );
 }
 
+/**
+ * App - Main application component with routing
+ */
 function App() {
   return (
     <BrowserRouter>
@@ -112,6 +129,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="flight-results" element={<FlightResultsPage />} />
+          <Route path="favorites" element={<FavoritesPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

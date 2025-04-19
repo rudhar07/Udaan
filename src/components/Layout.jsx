@@ -1,6 +1,46 @@
 import { Link, Outlet } from 'react-router-dom';
+import { useFlightContext } from '../context/FlightContext';
+import { useAuth } from '../context/AuthContext';
+import { useState, useRef, useEffect } from 'react';
 
+/**
+ * Layout - Main layout component for the application
+ * Includes header, navigation, main content area, and footer
+ */
 function Layout() {
+  const { favorites } = useFlightContext();
+  const { currentUser, login, logout } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  
+  // App name from environment variables
+  const appName = import.meta.env.VITE_APP_NAME || 'Udaan';
+
+  // Handle clicks outside of the dropdown to close it
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Handle Google sign in
+  const handleSignIn = () => {
+    login();
+  };
+
+  // Handle sign out
+  const handleSignOut = () => {
+    logout();
+    setDropdownOpen(false);
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
       {/* Header */}
@@ -8,15 +48,59 @@ function Layout() {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link to="/" className="flex items-center space-x-3 transition hover:scale-105">
             <span className="text-3xl">✈️</span>
-            <h1 className="text-2xl font-bold tracking-tight">Udaan</h1>
+            <h1 className="text-2xl font-bold tracking-tight">{appName}</h1>
           </Link>
           
           <nav className="hidden md:flex space-x-6">
             <Link to="/" className="py-2 px-4 rounded-full hover:bg-white/20 transition-all font-medium">Flights</Link>
+            <Link to="/favorites" className="py-2 px-4 rounded-full hover:bg-white/20 transition-all font-medium flex items-center">
+              Favorites
+              {favorites.length > 0 && (
+                <span className="ml-2 bg-white text-indigo-600 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {favorites.length}
+                </span>
+              )}
+            </Link>
           </nav>
           
           <div className="flex items-center space-x-4">
-            <button className="bg-white/10 hover:bg-white/20 py-2 px-5 rounded-full text-sm font-medium transition-all">Sign In</button>
+            {currentUser ? (
+              <div className="relative" ref={dropdownRef}>
+                <button 
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 py-1 pl-1 pr-3 rounded-full transition-all"
+                >
+                  <img 
+                    src={currentUser.photoURL} 
+                    alt={currentUser.displayName} 
+                    className="w-8 h-8 rounded-full border-2 border-white"
+                  />
+                  <span className="font-medium text-sm">{currentUser.displayName?.split(' ')[0]}</span>
+                </button>
+                
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-10">
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <p className="text-sm font-medium text-gray-900 truncate">{currentUser.displayName}</p>
+                      <p className="text-xs text-gray-500 truncate">{currentUser.email}</p>
+                    </div>
+                    <button 
+                      onClick={handleSignOut}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button 
+                onClick={handleSignIn}
+                className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 py-2 px-5 rounded-full text-sm font-medium transition-all"
+              >
+                <span>Sign in with Google</span>
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -45,9 +129,10 @@ function Layout() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
             <div>
               <h3 className="text-xl font-semibold mb-5 flex items-center">
-                <span className="text-2xl mr-2">✈️</span> Udaan
+                <span className="text-2xl mr-2">✈️</span> {appName}
               </h3>
               <p className="text-slate-300">Your one-stop solution for flight bookings with the best prices guaranteed.</p>
+              <p className="text-xs text-slate-400 mt-2">Version: {import.meta.env.VITE_APP_VERSION || '1.0.0'}</p>
             </div>
             
             <div>
@@ -56,6 +141,10 @@ function Layout() {
                 <li><Link to="/" className="text-slate-300 hover:text-white flex items-center">
                   <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
                   Flight Search
+                </Link></li>
+                <li><Link to="/favorites" className="text-slate-300 hover:text-white flex items-center">
+                  <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"></path></svg>
+                  Favorite Flights
                 </Link></li>
               </ul>
             </div>
@@ -80,7 +169,7 @@ function Layout() {
           </div>
           
           <div className="border-t border-slate-700 pt-8">
-            <p className="text-center text-slate-400">&copy; {new Date().getFullYear()} Udaan. All rights reserved.</p>
+            <p className="text-center text-slate-400">&copy; {new Date().getFullYear()} {appName}. All rights reserved.</p>
           </div>
         </div>
       </footer>

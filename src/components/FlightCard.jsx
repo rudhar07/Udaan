@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useFlightContext } from '../context/FlightContext';
+import { useAuth } from '../context/AuthContext';
 
 // Airline logo mapping
 const airlineLogos = {
   'IndiGo': 'https://upload.wikimedia.org/wikipedia/commons/9/9b/IndiGo_Airlines_logo.svg',
   'Air India': 'https://upload.wikimedia.org/wikipedia/commons/6/6f/Air_India.svg',
-  'Vistara': 'https://brandfetch.com/airvistara.com/logo',
+  'Vistara': 'https://companieslogo.com/img/orig/VISTARA-c07b120f.png',
   'SpiceJet': 'https://companieslogo.com/img/orig/SPICEJET-6a0c3b5e.png?t=1633073270',
   'GoAir': 'https://seeklogo.com/images/G/goair-airlines-logo-276810-seeklogo.com.png',
   'AirAsia': 'https://upload.wikimedia.org/wikipedia/commons/2/2b/AirAsia_New_Logo_%282020%29.svg',
@@ -12,13 +14,23 @@ const airlineLogos = {
   // Add more airlines as needed
 };
 
-
 // Default logo for airlines not in the mapping
 const defaultLogo = '✈️';
 
+/**
+ * FlightCard - A component to display flight information 
+ * 
+ * @param {Object} props - Component props
+ * @param {Object} props.flight - Flight data object
+ */
 function FlightCard({ flight }) {
+  const { favorites, addToFavorites, removeFromFavorites } = useFlightContext();
+  const { currentUser, login } = useAuth();
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+
   // Default values in case flight object is not complete
   const {
+    id = `FL${Math.random().toString(36).substr(2, 9)}`,
     airline = 'Airline',
     logo = airlineLogos[airline] || defaultLogo,
     departureTime = '00:00',
@@ -31,6 +43,9 @@ function FlightCard({ flight }) {
     currency = 'INR',
     bookingLink = '#'
   } = flight || {};
+
+  // Check if flight is in favorites
+  const isFavorite = favorites.some(fav => fav.id === id);
 
   // Format stops text
   const stopsText = stops === 0 
@@ -49,6 +64,27 @@ function FlightCard({ flight }) {
   // Handle booking click
   const handleBookingClick = () => {
     window.open(bookingLink, '_blank');
+  };
+
+  // Handle favorite toggle
+  const handleFavoriteToggle = () => {
+    if (!currentUser) {
+      setShowLoginPrompt(true);
+      setTimeout(() => setShowLoginPrompt(false), 3000);
+      return;
+    }
+    
+    if (isFavorite) {
+      removeFromFavorites(id);
+    } else {
+      addToFavorites(flight);
+    }
+  };
+
+  // Handle sign in
+  const handleSignIn = (e) => {
+    e.stopPropagation();
+    login();
   };
 
   return (
@@ -76,11 +112,48 @@ function FlightCard({ flight }) {
               <div className="text-xs text-slate-500">Flight #{Math.floor(Math.random() * 1000) + 1000}</div>
             </div>
           </div>
-          <div className="text-right">
-            <div className="text-xl font-bold text-indigo-600">
-              {currency} {price.toLocaleString()}
+          <div className="flex items-center">
+            <div className="relative">
+              <button 
+                onClick={handleFavoriteToggle}
+                className={`mr-4 p-2 rounded-full transition-colors ${
+                  isFavorite 
+                    ? 'bg-red-100 text-red-500 hover:bg-red-200' 
+                    : 'bg-slate-100 text-slate-400 hover:text-indigo-500 hover:bg-indigo-50'
+                }`}
+                aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+                title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path 
+                    fillRule="evenodd" 
+                    d={isFavorite 
+                      ? "M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" 
+                      : "M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656zm6.828 1.172a4 4 0 00-5.656 0l-1.172 1.171-1.172-1.171a4 4 0 00-5.656 5.656l6.828 6.829 6.828-6.829a4 4 0 000-5.656z"
+                  } 
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+              </button>
+              
+              {showLoginPrompt && !currentUser && (
+                <div className="absolute right-0 top-0 mt-10 w-48 bg-white rounded-lg shadow-lg p-3 z-10 text-xs animate-fade-in">
+                  <p className="text-slate-700 mb-2">Sign in to save favorites</p>
+                  <button
+                    onClick={handleSignIn}
+                    className="text-indigo-600 hover:text-indigo-800 font-medium"
+                  >
+                    Sign in with Google
+                  </button>
+                </div>
+              )}
             </div>
-            <div className="text-xs text-slate-500">per passenger</div>
+            <div className="text-right">
+              <div className="text-xl font-bold text-indigo-600">
+                {currency} {price.toLocaleString()}
+              </div>
+              <div className="text-xs text-slate-500">per passenger</div>
+            </div>
           </div>
         </div>
         
