@@ -1,31 +1,26 @@
 import React from 'react';
 
-// Simple airline icons using CSS colors instead of unreliable external images
-const AirlineIcon = ({ airline }) => {
-  const colors = {
-    'IndiGo': 'bg-blue-600',
-    'Air India': 'bg-red-600',
-    'Vistara': 'bg-purple-600',
-    'SpiceJet': 'bg-orange-600',
-    'GoAir': 'bg-green-600',
-    'AirAsia': 'bg-red-500',
-    'Alliance Air': 'bg-blue-800',
-  };
-
-  const bgColor = colors[airline] || 'bg-indigo-600';
-  const letter = airline.charAt(0);
-
-  return (
-    <div className={`w-12 h-12 rounded-full ${bgColor} flex items-center justify-center text-white text-xl font-bold`}>
-      {letter}
-    </div>
-  );
+// Airline logo mapping
+const airlineLogos = {
+  'IndiGo': 'https://upload.wikimedia.org/wikipedia/commons/9/9b/IndiGo_Airlines_logo.svg',
+  'Air India': 'https://upload.wikimedia.org/wikipedia/commons/6/6f/Air_India.svg',
+  'Vistara': 'https://brandfetch.com/airvistara.com/logo',
+  'SpiceJet': 'https://companieslogo.com/img/orig/SPICEJET-6a0c3b5e.png?t=1633073270',
+  'GoAir': 'https://seeklogo.com/images/G/goair-airlines-logo-276810-seeklogo.com.png',
+  'AirAsia': 'https://upload.wikimedia.org/wikipedia/commons/2/2b/AirAsia_New_Logo_%282020%29.svg',
+  'Alliance Air': 'https://airhex.com/images/airline-logos/alliance-air.png',
+  // Add more airlines as needed
 };
+
+
+// Default logo for airlines not in the mapping
+const defaultLogo = '✈️';
 
 function FlightCard({ flight }) {
   // Default values in case flight object is not complete
   const {
     airline = 'Airline',
+    logo = airlineLogos[airline] || defaultLogo,
     departureTime = '00:00',
     arrivalTime = '00:00',
     departureAirport = 'DEP',
@@ -61,7 +56,21 @@ function FlightCard({ flight }) {
       <div className="p-5">
         <div className="flex justify-between items-center mb-5">
           <div className="flex items-center space-x-3">
-            <AirlineIcon airline={airline} />
+            {typeof logo === 'string' && logo.startsWith('http') ? (
+              <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">
+                <img 
+                  src={logo} 
+                  alt={`${airline} logo`} 
+                  className="w-10 h-10 object-contain"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.parentNode.innerHTML = defaultLogo;
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="text-2xl bg-slate-100 w-12 h-12 rounded-full flex items-center justify-center">{defaultLogo}</div>
+            )}
             <div className="flex flex-col">
               <div className="font-medium text-slate-800">{airline}</div>
               <div className="text-xs text-slate-500">Flight #{Math.floor(Math.random() * 1000) + 1000}</div>

@@ -7,6 +7,7 @@ const sampleFlights = [
   {
     id: 1,
     airline: 'IndiGo',
+    logo: 'https://logos-world.net/wp-content/uploads/2023/01/IndiGo-Logo-700x394.png',
     departureTime: '06:00',
     arrivalTime: '08:30',
     departureAirport: 'DEL',
@@ -19,6 +20,7 @@ const sampleFlights = [
   {
     id: 2,
     airline: 'Air India',
+    logo: 'https://logos-world.net/wp-content/uploads/2023/02/Air-India-Logo-700x394.png',
     departureTime: '10:15',
     arrivalTime: '13:30',
     departureAirport: 'DEL',
@@ -31,6 +33,7 @@ const sampleFlights = [
   {
     id: 3,
     airline: 'Vistara',
+    logo: 'https://logos-world.net/wp-content/uploads/2023/03/Vistara-Logo-700x394.png',
     departureTime: '16:45',
     arrivalTime: '19:00',
     departureAirport: 'DEL',
@@ -43,6 +46,7 @@ const sampleFlights = [
   {
     id: 4,
     airline: 'SpiceJet',
+    logo: 'https://logos-world.net/wp-content/uploads/2023/01/SpiceJet-Logo-2014-present-700x394.png',
     departureTime: '19:30',
     arrivalTime: '22:15',
     departureAirport: 'DEL',
