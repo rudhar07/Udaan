@@ -95,10 +95,6 @@ function FlightResults({ searchParams }) {
       } catch (err) {
         console.error('Error fetching flight data:', err);
         setError(err.message || 'Failed to fetch flight data. Please try again.');
-        
-        // If API fails, use sample data for testing/fallback
-        setOriginalFlights(sampleFlights);
-        setFlights(sortFlightData(sampleFlights, 'price'));
       } finally {
         setLoading(false);
       }
@@ -155,72 +151,151 @@ function FlightResults({ searchParams }) {
     setFlights(sortFlightData(filteredFlights, sortBy));
   };
 
+  // Format the search parameters for display
+  const formatSearchSummary = () => {
+    if (!searchParams) return '';
+    
+    const from = searchParams.from;
+    const to = searchParams.to;
+    const departureDate = new Date(searchParams.departure).toLocaleDateString('en-US', {
+      weekday: 'short', 
+      month: 'short', 
+      day: 'numeric'
+    });
+    
+    let summary = `${from} to ${to} · ${departureDate}`;
+    
+    if (searchParams.return) {
+      const returnDate = new Date(searchParams.return).toLocaleDateString('en-US', {
+        weekday: 'short', 
+        month: 'short', 
+        day: 'numeric'
+      });
+      summary += ` · Return: ${returnDate}`;
+    }
+    
+    summary += ` · ${searchParams.passengers} passenger${searchParams.passengers > 1 ? 's' : ''}`;
+    summary += ` · ${searchParams.cabinClass.charAt(0).toUpperCase() + searchParams.cabinClass.slice(1)}`;
+    
+    return summary;
+  };
+
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Flight Results</h2>
+    <div className="relative">
+      {/* Search summary and results count */}
+      <div className="bg-gradient-to-r from-indigo-700 to-blue-600 text-white rounded-xl p-6 mb-6 shadow-lg">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+          <div>
+            <h2 className="text-2xl font-bold mb-2">{searchParams?.from} → {searchParams?.to}</h2>
+            <p className="text-indigo-100">{formatSearchSummary()}</p>
+          </div>
+          
+          {!loading && !error && (
+            <div className="mt-4 md:mt-0 bg-white/20 rounded-lg py-2 px-4 text-sm backdrop-blur-sm">
+              <span className="font-semibold">{flights.length}</span> {flights.length === 1 ? 'flight' : 'flights'} found
+            </div>
+          )}
+        </div>
+      </div>
         
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#0770e3]"></div>
+      {/* Main content */}
+      {loading ? (
+        <div className="bg-white rounded-xl shadow-md p-10 flex flex-col items-center justify-center">
+          <div className="w-16 h-16 border-t-4 border-b-4 border-indigo-500 rounded-full animate-spin mb-4"></div>
+          <p className="text-slate-600 animate-pulse">Searching for the best flights...</p>
+        </div>
+      ) : error ? (
+        <div className="bg-white rounded-xl shadow-md p-10 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 text-red-500 mb-4">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
           </div>
-        ) : error ? (
-          <div className="text-center py-8 text-red-500">
-            <p>{error}</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="mt-4 bg-[#0770e3] text-white px-4 py-2 rounded"
-            >
-              Try Again
-            </button>
-          </div>
-        ) : (
-          <>
-            {/* Filters and sorting */}
-            <div className="flex flex-wrap gap-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Sort by</label>
-                <select 
-                  value={sortBy} 
-                  onChange={(e) => sortFlights(e.target.value)}
-                  className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#0770e3]"
-                >
-                  <option value="price">Price (Lowest first)</option>
-                  <option value="duration">Duration (Shortest first)</option>
-                  <option value="departure">Departure (Earliest first)</option>
-                </select>
+          <h3 className="text-lg font-semibold text-slate-800 mb-2">Search Error</h3>
+          <p className="text-slate-600 mb-6">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200"
+          >
+            Try Again
+          </button>
+        </div>
+      ) : (
+        <>
+          {/* Filters and sorting */}
+          <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+            <div className="flex flex-wrap gap-5">
+              <div className="flex-1 min-w-[180px]">
+                <label className="block text-sm font-medium text-slate-700 mb-2">Sort by</label>
+                <div className="relative">
+                  <select 
+                    value={sortBy} 
+                    onChange={(e) => sortFlights(e.target.value)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pr-10"
+                  >
+                    <option value="price">Price (Lowest first)</option>
+                    <option value="duration">Duration (Shortest first)</option>
+                    <option value="departure">Departure (Earliest first)</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg className="w-5 h-5 text-slate-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"></path>
+                    </svg>
+                  </div>
+                </div>
               </div>
               
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Stops</label>
-                <select 
-                  value={filterStops} 
-                  onChange={(e) => filterFlightsByStops(e.target.value)}
-                  className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#0770e3]"
-                >
-                  <option value="all">All flights</option>
-                  <option value="0">Direct flights only</option>
-                  <option value="1">1 stop</option>
-                  <option value="2">2+ stops</option>
-                </select>
+              <div className="flex-1 min-w-[180px]">
+                <label className="block text-sm font-medium text-slate-700 mb-2">Filter by stops</label>
+                <div className="relative">
+                  <select 
+                    value={filterStops} 
+                    onChange={(e) => filterFlightsByStops(e.target.value)}
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pr-10"
+                  >
+                    <option value="all">All flights</option>
+                    <option value="0">Direct flights only</option>
+                    <option value="1">1 stop</option>
+                    <option value="2">2+ stops</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg className="w-5 h-5 text-slate-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"></path>
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
+          </div>
             
-            {/* Flight list */}
-            <div className="space-y-4">
-              {flights.length > 0 ? (
-                flights.map(flight => (
-                  <FlightCard key={flight.id} flight={flight} />
-                ))
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  No flights match your criteria. Try adjusting your filters.
+          {/* Flight list */}
+          <div className="space-y-6">
+            {flights.length > 0 ? (
+              flights.map(flight => (
+                <FlightCard key={flight.id} flight={flight} />
+              ))
+            ) : (
+              <div className="bg-white rounded-xl shadow-md p-10 text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-100 text-amber-500 mb-4">
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"></path>
+                  </svg>
                 </div>
-              )}
-            </div>
-          </>
-        )}
-      </div>
+                <h3 className="text-lg font-semibold text-slate-800 mb-2">No flights found</h3>
+                <p className="text-slate-600 mb-6">
+                  No flights match your criteria. Try changing your filters or search for different dates.
+                </p>
+                <button 
+                  onClick={() => filterFlightsByStops('all')}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200"
+                >
+                  Show all flights
+                </button>
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
