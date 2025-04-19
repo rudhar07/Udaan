@@ -33,4 +33,6 @@ function DestinationCard({ destination }) {
   );
 }
 
+// yaha 
+
 export default DestinationCard; 
