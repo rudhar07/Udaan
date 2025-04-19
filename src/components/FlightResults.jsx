@@ -7,7 +7,6 @@ const sampleFlights = [
   {
     id: 1,
     airline: 'IndiGo',
-    logo: '✈️',
     departureTime: '06:00',
     arrivalTime: '08:30',
     departureAirport: 'DEL',
@@ -20,7 +19,6 @@ const sampleFlights = [
   {
     id: 2,
     airline: 'Air India',
-    logo: '✈️',
     departureTime: '10:15',
     arrivalTime: '13:30',
     departureAirport: 'DEL',
@@ -33,7 +31,6 @@ const sampleFlights = [
   {
     id: 3,
     airline: 'Vistara',
-    logo: '✈️',
     departureTime: '16:45',
     arrivalTime: '19:00',
     departureAirport: 'DEL',
@@ -46,7 +43,6 @@ const sampleFlights = [
   {
     id: 4,
     airline: 'SpiceJet',
-    logo: '✈️',
     departureTime: '19:30',
     arrivalTime: '22:15',
     departureAirport: 'DEL',

@@ -1,10 +1,31 @@
 import React from 'react';
 
+// Simple airline icons using CSS colors instead of unreliable external images
+const AirlineIcon = ({ airline }) => {
+  const colors = {
+    'IndiGo': 'bg-blue-600',
+    'Air India': 'bg-red-600',
+    'Vistara': 'bg-purple-600',
+    'SpiceJet': 'bg-orange-600',
+    'GoAir': 'bg-green-600',
+    'AirAsia': 'bg-red-500',
+    'Alliance Air': 'bg-blue-800',
+  };
+
+  const bgColor = colors[airline] || 'bg-indigo-600';
+  const letter = airline.charAt(0);
+
+  return (
+    <div className={`w-12 h-12 rounded-full ${bgColor} flex items-center justify-center text-white text-xl font-bold`}>
+      {letter}
+    </div>
+  );
+};
+
 function FlightCard({ flight }) {
   // Default values in case flight object is not complete
   const {
     airline = 'Airline',
-    logo = '✈️',
     departureTime = '00:00',
     arrivalTime = '00:00',
     departureAirport = 'DEP',
@@ -40,7 +61,7 @@ function FlightCard({ flight }) {
       <div className="p-5">
         <div className="flex justify-between items-center mb-5">
           <div className="flex items-center space-x-3">
-            <div className="text-2xl bg-slate-100 w-10 h-10 rounded-full flex items-center justify-center">{logo}</div>
+            <AirlineIcon airline={airline} />
             <div className="flex flex-col">
               <div className="font-medium text-slate-800">{airline}</div>
               <div className="text-xs text-slate-500">Flight #{Math.floor(Math.random() * 1000) + 1000}</div>

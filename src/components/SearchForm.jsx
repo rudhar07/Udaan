@@ -280,7 +280,7 @@ function SearchForm({ onSearch }) {
         <div className="text-center text-sm text-slate-500 mt-4">
           Popular destinations: DEL, BOM, GOI, BLR, CCU, HYD
         </div>
-      </form>
+    </form>
     </div>
   );
 }
