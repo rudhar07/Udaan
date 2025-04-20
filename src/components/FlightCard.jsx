@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useFlightContext } from '../context/FlightContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -44,8 +44,23 @@ function FlightCard({ flight }) {
     bookingLink = '#'
   } = flight || {};
 
-  // Check if flight is in favorites
-  const isFavorite = favorites.some(fav => fav.id === id);
+  // Generate a consistent flight number based on flight attributes but outside 1000-1009
+  const flightNumber = useMemo(() => {
+    // Create a hash from flight attributes
+    const hash = `${airline}${departureAirport}${arrivalAirport}${departureTime}`.split('')
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    
+    // Generate a number between 1010-9999
+    return 1010 + (hash % 8990);
+  }, [airline, departureAirport, arrivalAirport, departureTime]);
+
+  // Check if flight is in favorites using multiple properties for more accurate matching
+  const isFavorite = favorites.some(fav => 
+    fav.departureAirport === departureAirport && 
+    fav.arrivalAirport === arrivalAirport &&
+    fav.departureTime === departureTime &&
+    fav.airline === airline
+  );
 
   // Format stops text
   const stopsText = stops === 0 
@@ -75,9 +90,24 @@ function FlightCard({ flight }) {
     }
     
     if (isFavorite) {
-      removeFromFavorites(id);
+      // Find the favorite item by matching properties
+      const favoriteItem = favorites.find(fav => 
+        fav.departureAirport === departureAirport && 
+        fav.arrivalAirport === arrivalAirport &&
+        fav.departureTime === departureTime &&
+        fav.airline === airline
+      );
+      
+      if (favoriteItem) {
+        removeFromFavorites(favoriteItem.id);
+      }
     } else {
-      addToFavorites(flight);
+      // Add flight with the consistent flight number
+      const flightWithConsistentNumber = {
+        ...flight,
+        flightNumber: flightNumber
+      };
+      addToFavorites(flightWithConsistentNumber);
     }
   };
 
@@ -109,7 +139,7 @@ function FlightCard({ flight }) {
             )}
             <div className="flex flex-col">
               <div className="font-medium text-slate-800">{airline}</div>
-              <div className="text-xs text-slate-500">Flight #{Math.floor(Math.random() * 1000) + 1000}</div>
+              <div className="text-xs text-slate-500">Flight #{flightNumber}</div>
             </div>
           </div>
           <div className="flex items-center">

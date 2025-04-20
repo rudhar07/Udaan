@@ -1,4 +1,3 @@
-
 import { createContext, useState, useContext, useEffect } from 'react';
 import amadeusService from '../services/amadeus';
 import { 
@@ -115,16 +114,30 @@ export function FlightProvider({ children }) {
     try {
       setError(null);
       
-      // Check if already in favorites
-      if (favorites.some(f => f.id === flight.id)) {
+      // Create a unique identifier for this flight based on multiple properties
+      const flightKey = `${flight.departureAirport}-${flight.arrivalAirport}-${flight.departureTime}-${flight.airline}`;
+      
+      // Check if already in favorites using the composite key
+      if (favorites.some(f => 
+        f.departureAirport === flight.departureAirport && 
+        f.arrivalAirport === flight.arrivalAirport &&
+        f.departureTime === flight.departureTime &&
+        f.airline === flight.airline
+      )) {
         return;
       }
       
+      // Ensure the flight has a stable ID before saving
+      const flightToSave = {
+        ...flight,
+        id: flight.id || `flight-${flightKey}`
+      };
+      
       // Add to Firebase
-      await addFavoriteFlight(currentUser.uid, flight);
+      await addFavoriteFlight(currentUser.uid, flightToSave);
       
       // Update local state
-      setFavorites(prev => [flight, ...prev]);
+      setFavorites(prev => [flightToSave, ...prev]);
     } catch (err) {
       setError('Failed to add favorite: ' + err.message);
     }

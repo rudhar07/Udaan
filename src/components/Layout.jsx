@@ -2,6 +2,8 @@ import { Link, Outlet } from 'react-router-dom';
 import { useFlightContext } from '../context/FlightContext';
 import { useAuth } from '../context/AuthContext';
 import { useState, useRef, useEffect } from 'react';
+// Import Helmet - Uncomment if using this approach instead of adding to index.html
+// import { Helmet } from 'react-helmet';
 
 /**
  * Layout - Main layout component for the application
@@ -43,6 +45,21 @@ function Layout() {
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+      {/* Uncomment this Helmet component if you want to use React Helmet instead of editing index.html
+      <Helmet>
+        <script data-noptimize="1" data-cfasync="false" data-wpfc-render="false">
+          {`
+            (function () {
+                var script = document.createElement("script");
+                script.async = 1;
+                script.src = 'https://tpembar.com/NDA5MTI5.js?t=409129';
+                document.head.appendChild(script);
+            })();
+          `}
+        </script>
+      </Helmet>
+      */}
+      
       {/* Header */}
       <header className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-5 px-6 shadow-lg">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -53,6 +70,7 @@ function Layout() {
           
           <nav className="hidden md:flex space-x-6">
             <Link to="/" className="py-2 px-4 rounded-full hover:bg-white/20 transition-all font-medium">Flights</Link>
+            <Link to="/hotels" className="py-2 px-4 rounded-full hover:bg-white/20 transition-all font-medium">Hotels</Link>
             <Link to="/favorites" className="py-2 px-4 rounded-full hover:bg-white/20 transition-all font-medium flex items-center">
               Favorites
               {favorites.length > 0 && (
@@ -141,6 +159,10 @@ function Layout() {
                 <li><Link to="/" className="text-slate-300 hover:text-white flex items-center">
                   <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
                   Flight Search
+                </Link></li>
+                <li><Link to="/hotels" className="text-slate-300 hover:text-white flex items-center">
+                  <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                  Hotel Booking
                 </Link></li>
                 <li><Link to="/favorites" className="text-slate-300 hover:text-white flex items-center">
                   <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"></path></svg>

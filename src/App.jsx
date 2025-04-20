@@ -5,6 +5,7 @@ import DestinationCard from './components/DestinationCard.jsx';
 import FlightResults from './components/FlightResults.jsx';
 import Layout from './components/Layout.jsx';
 import FavoritesPage from './pages/FavoritesPage.jsx';
+import HotelBookingPage from './pages/HotelBookingPage.jsx';
 import { useFlightContext } from './context/FlightContext.jsx';
 
 /**
@@ -130,6 +131,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="flight-results" element={<FlightResultsPage />} />
           <Route path="favorites" element={<FavoritesPage />} />
+          <Route path="hotels" element={<HotelBookingPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
