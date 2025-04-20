@@ -2,8 +2,6 @@ import { Link, Outlet } from 'react-router-dom';
 import { useFlightContext } from '../context/FlightContext';
 import { useAuth } from '../context/AuthContext';
 import { useState, useRef, useEffect } from 'react';
-// Import Helmet - Uncomment if using this approach instead of adding to index.html
-// import { Helmet } from 'react-helmet';
 
 /**
  * Layout - Main layout component for the application
@@ -45,21 +43,6 @@ function Layout() {
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
-      {/* Uncomment this Helmet component if you want to use React Helmet instead of editing index.html
-      <Helmet>
-        <script data-noptimize="1" data-cfasync="false" data-wpfc-render="false">
-          {`
-            (function () {
-                var script = document.createElement("script");
-                script.async = 1;
-                script.src = 'https://tpembar.com/NDA5MTI5.js?t=409129';
-                document.head.appendChild(script);
-            })();
-          `}
-        </script>
-      </Helmet>
-      */}
-      
       {/* Header */}
       <header className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-5 px-6 shadow-lg">
         <div className="max-w-7xl mx-auto flex justify-between items-center">

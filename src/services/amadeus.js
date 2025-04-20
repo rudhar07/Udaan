@@ -13,11 +13,115 @@
 
 // Get configuration from environment variables
 const config = {
-  apiKey: import.meta.env.VITE_AMADEUS_API_KEY,
-  apiSecret: import.meta.env.VITE_AMADEUS_API_SECRET,
-  apiUrl: import.meta.env.VITE_AMADEUS_API_URL,
-  useMockData: import.meta.env.VITE_ENABLE_MOCK_DATA === 'true'
+  apiKey: import.meta.env.VITE_AMADEUS_API_KEY || 'CwAfhOLzVvZ84qJ33B4FU1aUcjTJT4yk',
+  apiSecret: import.meta.env.VITE_AMADEUS_API_SECRET || 'JcOYSGl8KyoK4Z3E',
+  apiUrl: import.meta.env.VITE_AMADEUS_API_URL || 'https://test.api.amadeus.com',
+  useMockData: import.meta.env.VITE_ENABLE_MOCK_DATA === 'true' || true
 };
+
+// Token management
+let authToken = null;
+let tokenExpiration = null;
+
+/**
+ * Get a valid authentication token
+ * @returns {Promise<string>} - Authentication token
+ */
+export async function getToken() {
+  try {
+    // Check if we have a valid token
+    if (authToken && tokenExpiration && new Date() < tokenExpiration) {
+      return authToken;
+    }
+    
+    // Request a new token
+    const response = await fetch(`${config.apiUrl}/v1/security/oauth2/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        grant_type: 'client_credentials',
+        client_id: config.apiKey,
+        client_secret: config.apiSecret,
+      }),
+    });
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`Failed to get token: ${error.error_description || 'Unknown error'}`);
+    }
+    
+    const data = await response.json();
+    
+    // Set token and expiration
+    authToken = data.access_token;
+    // Set expiration to 30 seconds before actual expiration to prevent token expiration during requests
+    tokenExpiration = new Date(new Date().getTime() + (data.expires_in - 30) * 1000);
+    
+    console.log('Obtained new Amadeus API token');
+    return authToken;
+  } catch (error) {
+    console.error('Error getting authentication token:', error);
+    throw error;
+  }
+}
+
+/**
+ * Make a request to the Amadeus API
+ * @param {string} endpoint - API endpoint
+ * @param {Object} params - Query parameters
+ * @returns {Promise<Object>} - API response
+ */
+export async function makeRequest(endpoint, params = {}) {
+  // If mock data is enabled, return mock data directly
+  if (config.useMockData) {
+    console.log(`Mock data enabled - returning mock data for ${endpoint}`);
+    // Add a delay to simulate API call
+    await new Promise(resolve => setTimeout(resolve, 800));
+    // Return null to trigger the fallback to mock data in the calling functions
+    return null;
+  }
+  
+  try {
+    // Ensure we have a valid token
+    const token = await getToken();
+    
+    // Construct the URL with query parameters
+    const url = new URL(`${config.apiUrl}${endpoint}`);
+    Object.keys(params).forEach(key => {
+      url.searchParams.append(key, params[key]);
+    });
+    
+    // Make the request
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+      },
+    });
+    
+    // Handle rate limiting
+    if (response.status === 429) {
+      console.log('Rate limit exceeded, retrying after delay...');
+      // Wait for a few seconds and retry
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      return makeRequest(endpoint, params);
+    }
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('API error:', errorData);
+      throw new Error(`Amadeus API error: ${errorData.errors?.[0]?.detail || 'Unknown error'}`);
+    }
+    
+    return response.json();
+  } catch (error) {
+    console.error('Error making request to Amadeus API:', error);
+    throw error;
+  }
+}
 
 /**
  * Search for flights based on provided parameters
@@ -198,5 +302,6 @@ export async function getFlightInspiration(origin, maxPrice) {
 export default {
   searchFlights,
   getFlightInspiration,
-  // Add other exported functions here
+  getToken,
+  makeRequest
 }; 
