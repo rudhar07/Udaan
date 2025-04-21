@@ -111,10 +111,19 @@ function HotelBookingPage() {
   return (
     <div className="max-w-7xl mx-auto">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-indigo-700 to-blue-600 text-white rounded-xl p-8 mb-6 shadow-lg">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2">Book a hotel with a discount and save up to 60%</h1>
-          <p className="text-indigo-100 mb-6">We search 70+ booking systems to find you the best hotel deals</p>
+      <div className="bg-gradient-to-r from-indigo-700 to-blue-600 text-white rounded-xl p-8 mb-6 shadow-lg relative overflow-hidden">
+        {/* Hotel background overlay */}
+        <div className="absolute inset-0 opacity-15 mix-blend-overlay">
+          <img 
+            src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80" 
+            alt="Luxury hotel" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        
+        <div className="max-w-4xl mx-auto relative z-10">
+          <h1 className="text-3xl font-bold mb-2">Find the perfect hotel at the best price</h1>
+          <p className="text-indigo-100 mb-6">We compare 70+ booking sites to find you unbeatable hotel deals</p>
           
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6">
             <div className="flex items-center mb-3">
@@ -123,7 +132,7 @@ function HotelBookingPage() {
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
                 </svg>
               </div>
-              <span className="text-white text-sm md:text-base">We compare room prices from 70 different hotel booking services</span>
+              <span className="text-white text-sm md:text-base">Save up to 60% by comparing prices from all major booking sites</span>
             </div>
             <div className="flex items-center mb-3">
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center mr-3">
@@ -131,7 +140,7 @@ function HotelBookingPage() {
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
                 </svg>
               </div>
-              <span className="text-white text-sm md:text-base">Find exclusive deals with discounts up to 60% off standard rates</span>
+              <span className="text-white text-sm md:text-base">Access exclusive hotel deals not available on single booking platforms</span>
             </div>
             <div className="flex items-center">
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center mr-3">
@@ -139,7 +148,7 @@ function HotelBookingPage() {
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
                 </svg>
               </div>
-              <span className="text-white text-sm md:text-base">All prices are final with no hidden fees or taxes</span>
+              <span className="text-white text-sm md:text-base">See verified reviews from multiple sources for every hotel</span>
             </div>
           </div>
           
@@ -318,34 +327,35 @@ function HotelBookingPage() {
               <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300">
                 <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path>
+                    <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                    <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">More Hotels Than Direct Search</h3>
-                <p className="text-slate-600 mb-4">We compare room prices from 70 different hotel booking services, enabling you to pick the most affordable offers that aren't listed on individual sites.</p>
-                <p className="text-slate-600">The price for one and the same room can differ dramatically depending on the booking system you use.</p>
+                <h3 className="text-lg font-semibold mb-2">Compare Multiple Booking Sites</h3>
+                <p className="text-slate-600 mb-4">We search across 70+ hotel booking services simultaneously, saving you the time and hassle of checking multiple websites.</p>
+                <p className="text-slate-600">Find the best deals for your stay, with prices varying by up to 60% for the same room across different booking platforms.</p>
               </div>
               
               <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300">
                 <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clipRule="evenodd"></path>
+                    <path fillRule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Authentic Verified Reviews</h3>
-                <p className="text-slate-600 mb-4">We gather reviews from many booking services and calculate ratings based on all the reviews available online using smart analysis.</p>
-                <p className="text-slate-600">This means you get the most accurate picture of hotel quality from real guests.</p>
+                <h3 className="text-lg font-semibold mb-2">Verified Guest Reviews</h3>
+                <p className="text-slate-600 mb-4">We aggregate authentic reviews from multiple booking sites to give you the most accurate picture of each hotel's quality.</p>
+                <p className="text-slate-600">Make confident decisions based on feedback from real travelers who have experienced the property firsthand.</p>
               </div>
               
               <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300">
                 <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"></path>
+                    <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Final Prices, No Hidden Fees</h3>
-                <p className="text-slate-600 mb-4">We display the final room prices with all taxes and fees included. No surprises at checkout.</p>
-                <p className="text-slate-600">Save time by comparing final prices all in one place, without needing to check each booking site separately.</p>
+                <h3 className="text-lg font-semibold mb-2">Transparent Pricing</h3>
+                <p className="text-slate-600 mb-4">We show you the final price including all taxes and fees for each booking option, so you know exactly what you'll pay.</p>
+                <p className="text-slate-600">Compare hotels with confidence knowing there are no hidden charges or surprise fees at checkout.</p>
               </div>
             </div>
           </div>
@@ -589,25 +599,25 @@ const popularDestinations = [
     id: 1,
     name: 'Mumbai',
     cityId: 'Mumbai',
-    image: 'https://images.unsplash.com/photo-1562979314-bee7453e911c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
+    image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
     hotelCount: 245,
-    description: 'Experience the vibrant city life and coastal beauty of Mumbai.'
+    description: 'Experience luxury hotels with stunning city and sea views.'
   },
   {
     id: 2,
     name: 'Goa',
     cityId: 'Goa',
-    image: 'https://images.unsplash.com/photo-1614082242765-7c98ca0f3df3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
+    image: 'https://images.unsplash.com/photo-1566974957693-78edc5a2a31a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
     hotelCount: 189,
-    description: 'Relax on pristine beaches and enjoy the laid-back atmosphere.'
+    description: 'Beachfront resorts and boutique hotels with tropical vibes.'
   },
   {
     id: 3,
     name: 'Delhi',
     cityId: 'Delhi',
-    image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
+    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
     hotelCount: 312,
-    description: 'Explore the historic monuments and cultural heritage of India\'s capital.'
+    description: 'Historic luxury and modern comfort in India\'s capital.'
   }
 ];
 
