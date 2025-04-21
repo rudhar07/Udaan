@@ -11,8 +11,8 @@ const useProxy = isDevelopment; // Only use proxy in development
 // List of CORS proxy services we can use
 const proxies = [
   'https://corsproxy.io/?',
-  'https://cors-anywhere.herokuapp.com/',
-  'https://api.allorigins.win/raw?url='
+  'https://api.allorigins.win/raw?url=',
+  'https://cors-anywhere.herokuapp.com/'
 ];
 
 /**
@@ -63,17 +63,45 @@ export function createFetchOptions(options = {}) {
  * @returns {Promise<Response>} - Fetch response
  */
 export async function proxiedFetch(url, options = {}) {
+  const fetchOptions = createFetchOptions(options);
+  
   try {
-    // First try without a proxy
-    const response = await fetch(url, createFetchOptions(options));
+    // Try with the first proxy
+    const proxiedUrl = proxyUrl(url);
+    console.log('Fetching with proxied URL:', proxiedUrl);
+    const response = await fetch(proxiedUrl, fetchOptions);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
     return response;
   } catch (error) {
-    console.warn('Direct fetch failed, trying with proxy:', error);
+    console.warn('First proxy fetch failed:', error);
     
-    // If direct fetch fails, try with a proxy
-    const proxiedUrl = proxyUrl(url);
-    console.log('Using proxied URL:', proxiedUrl);
-    return fetch(proxiedUrl, createFetchOptions(options));
+    // Try with the second proxy if available
+    if (proxies.length > 1) {
+      try {
+        const backupProxyService = proxies[1];
+        const backupProxiedUrl = backupProxyService.includes('?url=')
+          ? `${backupProxyService}${encodeURIComponent(url)}`
+          : `${backupProxyService}${url}`;
+        
+        console.log('Trying backup proxy:', backupProxiedUrl);
+        const backupResponse = await fetch(backupProxiedUrl, fetchOptions);
+        
+        if (!backupResponse.ok) {
+          throw new Error(`HTTP error with backup proxy! status: ${backupResponse.status}`);
+        }
+        
+        return backupResponse;
+      } catch (backupError) {
+        console.error('All proxy attempts failed:', backupError);
+        throw backupError;
+      }
+    } else {
+      throw error;
+    }
   }
 }
 

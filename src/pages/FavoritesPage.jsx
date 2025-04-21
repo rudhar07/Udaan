@@ -11,7 +11,7 @@ function FavoritesPage() {
   const { favorites, removeFromFavorites, loadingFavorites } = useFlightContext();
   const { currentUser, login } = useAuth();
 
-  // Handle Google sign in
+  
   const handleSignIn = () => {
     login();
   };

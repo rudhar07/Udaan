@@ -8,9 +8,7 @@ import FavoritesPage from './pages/FavoritesPage.jsx';
 import HotelBookingPage from './pages/HotelBookingPage.jsx';
 import { useFlightContext } from './context/FlightContext.jsx';
 
-/**
- * Sample destination data for the home page
- */
+
 const popularDestinations = [
   {
     id: 1,
@@ -38,9 +36,7 @@ const popularDestinations = [
   }
 ];
 
-/**
- * HomePage - Main landing page with search form and popular destinations
- */
+
 function HomePage() {
   const navigate = useNavigate();
   const { popularRoutes } = useFlightContext();
@@ -50,7 +46,7 @@ function HomePage() {
    * @param {Object} params - Search parameters
    */
   const handleSearch = (params) => {
-    // Navigate to flight results page with search params
+    // Navigate to flight results 
     const searchQueryString = new URLSearchParams({
       from: params.from,
       to: params.to,
@@ -85,13 +81,12 @@ function HomePage() {
 }
 
 /**
- * FlightResultsPage - Page that displays flight search results
- * Extracts search parameters from URL and passes them to FlightResults component
+ * FlightResultsPage pt
  */
 function FlightResultsPage() {
   const [searchParams, setSearchParams] = useState(null);
   
-  // Extract search params from URL on component mount
+  // Extract search 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const params = {
