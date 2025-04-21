@@ -9,6 +9,7 @@ A comprehensive travel platform built with React, allowing users to search for f
 - **Hotel Price Comparison**: Compare hotel prices across 70+ booking systems to find the best deals
 - **Hotel Search**: Search for hotels with customizable parameters (location, dates, guests, rooms)
 - **Favorites**: Save and manage favorite flights and hotels
+- **Dark/Light Theme**: Toggle between dark and light modes for comfortable viewing in any environment
 - **User-friendly Interface**: Modern UI with responsive design
 - **Price Alerts**: Get notified when prices change for your saved searches
 - **Well-structured Codebase**: Modular components and clean architecture
@@ -19,6 +20,7 @@ A comprehensive travel platform built with React, allowing users to search for f
 - **State Management**: React Context API
 - **Routing**: React Router
 - **UI Framework**: Tailwind CSS
+- **Theming**: Dark mode support with Tailwind and CSS custom properties
 - **API Integration**: 
   - Amadeus API for flights (with fallback to mock data)
   - Hotellook API for hotel price comparison
@@ -32,6 +34,8 @@ udaan/
 ├── src/                 # Source code
 │   ├── components/      # Reusable UI components
 │   ├── context/         # React Context providers
+│   │   ├── ThemeContext.jsx # Theme management context
+│   │   └── ...              # Other contexts
 │   ├── pages/           # Page components
 │   │   ├── FavoritesPage.jsx         # Saved favorites
 │   │   ├── FlightInspirationPage.jsx # Flight inspiration
@@ -119,6 +123,11 @@ udaan/
 3. **Favorites**:
    - Click the heart icon on any flight or hotel card to save it to favorites
    - Navigate to the favorites page to view and manage saved items
+
+4. **Theme Toggle**:
+   - Click the sun/moon icon in the header to switch between light and dark modes
+   - The app remembers your preference for future visits
+   - If no preference is set, the app defaults to your system's theme preference
 
 ## Hotel Price Comparison
 

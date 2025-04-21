@@ -1,5 +1,6 @@
 import { useFlightContext } from '../context/FlightContext';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import FlightCard from '../components/FlightCard.jsx';
 
 /**
@@ -10,6 +11,7 @@ import FlightCard from '../components/FlightCard.jsx';
 function FavoritesPage() {
   const { favorites, removeFromFavorites, loadingFavorites } = useFlightContext();
   const { currentUser, login } = useAuth();
+  const { isDarkMode } = useTheme();
 
   
   const handleSignIn = () => {
@@ -30,14 +32,14 @@ function FavoritesPage() {
 
       {/* Content */}
       {!currentUser ? (
-        <div className="bg-white rounded-xl shadow-md p-10 text-center">
+        <div className={`${isDarkMode ? 'bg-slate-800 text-white' : 'bg-white'} rounded-xl shadow-md p-10 text-center`}>
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 text-slate-500 mb-4">
             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path>
             </svg>
           </div>
-          <h2 className="text-xl font-semibold text-slate-800 mb-2">Sign in to view favorites</h2>
-          <p className="text-slate-600 mb-6">
+          <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-slate-200' : 'text-slate-800'} mb-2`}>Sign in to view favorites</h2>
+          <p className={`${isDarkMode ? 'text-slate-300' : 'text-slate-600'} mb-6`}>
             Please sign in with your Google account to save and view your favorite flights across devices.
           </p>
           <button 
@@ -51,9 +53,9 @@ function FavoritesPage() {
           </button>
         </div>
       ) : loadingFavorites ? (
-        <div className="bg-white rounded-xl shadow-md p-10 flex flex-col items-center justify-center">
+        <div className={`${isDarkMode ? 'bg-slate-800' : 'bg-white'} rounded-xl shadow-md p-10 flex flex-col items-center justify-center`}>
           <div className="w-16 h-16 border-t-4 border-b-4 border-indigo-500 rounded-full animate-spin mb-4"></div>
-          <p className="text-slate-600 animate-pulse">Loading your favorites...</p>
+          <p className={`${isDarkMode ? 'text-slate-300' : 'text-slate-600'} animate-pulse`}>Loading your favorites...</p>
         </div>
       ) : favorites.length > 0 ? (
         <div className="space-y-6">
@@ -74,14 +76,14 @@ function FavoritesPage() {
           ))}
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-md p-10 text-center">
+        <div className={`${isDarkMode ? 'bg-slate-800' : 'bg-white'} rounded-xl shadow-md p-10 text-center`}>
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 text-slate-500 mb-4">
             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"></path>
             </svg>
           </div>
-          <h2 className="text-xl font-semibold text-slate-800 mb-2">No favorites yet</h2>
-          <p className="text-slate-600 mb-6">
+          <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-slate-200' : 'text-slate-800'} mb-2`}>No favorites yet</h2>
+          <p className={`${isDarkMode ? 'text-slate-300' : 'text-slate-600'} mb-6`}>
             When you find flights you like, save them here for easy comparison.
           </p>
           <a 

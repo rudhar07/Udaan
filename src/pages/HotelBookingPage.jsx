@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import hotelService from '../services/hotels';
 
 /**
@@ -9,6 +10,7 @@ import hotelService from '../services/hotels';
 function HotelBookingPage() {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const { isDarkMode } = useTheme();
   const [searchParams, setSearchParams] = useState({
     location: '',
     checkIn: '',
@@ -153,10 +155,10 @@ function HotelBookingPage() {
           </div>
           
           {/* Search Form */}
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 text-slate-800">
+          <form onSubmit={handleSubmit} className={`${isDarkMode ? 'bg-slate-800 text-white' : 'bg-white text-slate-800'} rounded-lg shadow-md p-6`}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
               <div className="lg:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="location">
+                <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-slate-700'} mb-1`} htmlFor="location">
                   Destination / Hotel Name
                 </label>
                 <input
@@ -167,12 +169,14 @@ function HotelBookingPage() {
                   value={searchParams.location}
                   onChange={handleInputChange}
                   placeholder="City, Area, or Hotel"
-                  className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                    isDarkMode ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' : 'bg-slate-50 border-slate-200 text-slate-900'
+                  }`}
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="checkIn">
+                <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-slate-700'} mb-1`} htmlFor="checkIn">
                   Check-in Date
                 </label>
                 <input
@@ -183,12 +187,14 @@ function HotelBookingPage() {
                   value={searchParams.checkIn}
                   onChange={handleInputChange}
                   min={new Date().toISOString().split('T')[0]}
-                  className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                    isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                  }`}
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="checkOut">
+                <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-slate-700'} mb-1`} htmlFor="checkOut">
                   Check-out Date
                 </label>
                 <input
@@ -199,7 +205,9 @@ function HotelBookingPage() {
                   value={searchParams.checkOut}
                   onChange={handleInputChange}
                   min={searchParams.checkIn || new Date().toISOString().split('T')[0]}
-                  className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                    isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                  }`}
                 />
               </div>
               
@@ -218,7 +226,7 @@ function HotelBookingPage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="guests">
+                <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-slate-700'} mb-1`} htmlFor="guests">
                   Guests
                 </label>
                 <select
@@ -226,7 +234,9 @@ function HotelBookingPage() {
                   name="guests"
                   value={searchParams.guests}
                   onChange={handleInputChange}
-                  className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                    isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                  }`}
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
                     <option key={num} value={num}>{num} {num === 1 ? 'Guest' : 'Guests'}</option>
@@ -235,7 +245,7 @@ function HotelBookingPage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="rooms">
+                <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-slate-700'} mb-1`} htmlFor="rooms">
                   Rooms
                 </label>
                 <select
@@ -243,7 +253,9 @@ function HotelBookingPage() {
                   name="rooms"
                   value={searchParams.rooms}
                   onChange={handleInputChange}
-                  className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                    isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                  }`}
                 >
                   {[1, 2, 3, 4, 5].map(num => (
                     <option key={num} value={num}>{num} {num === 1 ? 'Room' : 'Rooms'}</option>
@@ -259,19 +271,19 @@ function HotelBookingPage() {
       {searched && (
         <div className="mb-12">
           {loading ? (
-            <div className="bg-white rounded-xl shadow-md p-12 text-center">
+            <div className={`${isDarkMode ? 'bg-slate-800' : 'bg-white'} rounded-xl shadow-md p-12 text-center`}>
               <div className="w-16 h-16 border-t-4 border-b-4 border-indigo-500 rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-slate-600 animate-pulse">Searching for hotels...</p>
+              <p className={`${isDarkMode ? 'text-slate-300' : 'text-slate-600'} animate-pulse`}>Searching for hotels...</p>
             </div>
           ) : error ? (
-            <div className="bg-white rounded-xl shadow-md p-10 text-center">
+            <div className={`${isDarkMode ? 'bg-slate-800' : 'bg-white'} rounded-xl shadow-md p-10 text-center`}>
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 text-red-500 mb-4">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-slate-800 mb-2">Search Error</h3>
-              <p className="text-slate-600 mb-6">{error}</p>
+              <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-slate-200' : 'text-slate-800'} mb-2`}>Search Error</h3>
+              <p className={`${isDarkMode ? 'text-slate-300' : 'text-slate-600'} mb-6`}>{error}</p>
               <button 
                 onClick={() => setSearched(false)} 
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200"
@@ -280,14 +292,14 @@ function HotelBookingPage() {
               </button>
             </div>
           ) : hotels.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-md p-10 text-center">
+            <div className={`${isDarkMode ? 'bg-slate-800' : 'bg-white'} rounded-xl shadow-md p-10 text-center`}>
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-yellow-100 text-yellow-500 mb-4">
                 <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                   <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"></path>
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-slate-800 mb-2">No Hotels Found</h3>
-              <p className="text-slate-600 mb-6">We couldn't find any hotels matching your search criteria. Please try adjusting your search.</p>
+              <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-slate-200' : 'text-slate-800'} mb-2`}>No Hotels Found</h3>
+              <p className={`${isDarkMode ? 'text-slate-300' : 'text-slate-600'} mb-6`}>We couldn't find any hotels matching your search criteria. Please try adjusting your search.</p>
               <button 
                 onClick={() => setSearched(false)} 
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200"
@@ -297,18 +309,18 @@ function HotelBookingPage() {
             </div>
           ) : (
             <div>
-              <div className="bg-white rounded-xl shadow-md p-4 mb-6">
-                <h2 className="text-2xl font-bold text-slate-800 mb-2">
+              <div className={`${isDarkMode ? 'bg-slate-800' : 'bg-white'} rounded-xl shadow-md p-4 mb-6`}>
+                <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-slate-200' : 'text-slate-800'} mb-2`}>
                   Hotels in {searchParams.location}
                 </h2>
-                <p className="text-slate-600">
+                <p className={`${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
                   {hotels.length} hotels found • {formatDisplayDate(searchParams.checkIn)} - {formatDisplayDate(searchParams.checkOut)} • {searchParams.guests} guests
                 </p>
               </div>
               
               <div className="grid grid-cols-1 gap-6">
                 {hotels.map(hotel => (
-                  <HotelCard key={hotel.id} hotel={hotel} />
+                  <HotelCard key={hotel.id} hotel={hotel} isDarkMode={isDarkMode} />
                 ))}
               </div>
             </div>
@@ -321,41 +333,41 @@ function HotelBookingPage() {
         <>
           {/* Why use our service */}
           <div className="mb-10">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6">Why choose our hotel comparison service?</h2>
+            <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-slate-200' : 'text-slate-800'} mb-6`}>Why choose our hotel comparison service?</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300">
+              <div className={`${isDarkMode ? 'bg-slate-800' : 'bg-white'} rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300`}>
                 <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
                     <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Compare Multiple Booking Sites</h3>
-                <p className="text-slate-600 mb-4">We search across 70+ hotel booking services simultaneously, saving you the time and hassle of checking multiple websites.</p>
-                <p className="text-slate-600">Find the best deals for your stay, with prices varying by up to 60% for the same room across different booking platforms.</p>
+                <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`}>Compare Multiple Booking Sites</h3>
+                <p className={`${isDarkMode ? 'text-slate-300' : 'text-slate-600'} mb-4`}>We search across 70+ hotel booking services simultaneously, saving you the time and hassle of checking multiple websites.</p>
+                <p className={`${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>Find the best deals for your stay, with prices varying by up to 60% for the same room across different booking platforms.</p>
               </div>
               
-              <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300">
+              <div className={`${isDarkMode ? 'bg-slate-800' : 'bg-white'} rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300`}>
                 <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path fillRule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Verified Guest Reviews</h3>
-                <p className="text-slate-600 mb-4">We aggregate authentic reviews from multiple booking sites to give you the most accurate picture of each hotel's quality.</p>
-                <p className="text-slate-600">Make confident decisions based on feedback from real travelers who have experienced the property firsthand.</p>
+                <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`}>Verified Guest Reviews</h3>
+                <p className={`${isDarkMode ? 'text-slate-300' : 'text-slate-600'} mb-4`}>We aggregate authentic reviews from multiple booking sites to give you the most accurate picture of each hotel's quality.</p>
+                <p className={`${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>Make confident decisions based on feedback from real travelers who have experienced the property firsthand.</p>
               </div>
               
-              <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300">
+              <div className={`${isDarkMode ? 'bg-slate-800' : 'bg-white'} rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300`}>
                 <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Transparent Pricing</h3>
-                <p className="text-slate-600 mb-4">We show you the final price including all taxes and fees for each booking option, so you know exactly what you'll pay.</p>
-                <p className="text-slate-600">Compare hotels with confidence knowing there are no hidden charges or surprise fees at checkout.</p>
+                <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`}>Transparent Pricing</h3>
+                <p className={`${isDarkMode ? 'text-slate-300' : 'text-slate-600'} mb-4`}>We show you the final price including all taxes and fees for each booking option, so you know exactly what you'll pay.</p>
+                <p className={`${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>Compare hotels with confidence knowing there are no hidden charges or surprise fees at checkout.</p>
               </div>
             </div>
           </div>
@@ -371,6 +383,7 @@ function HotelBookingPage() {
                     setSearchParams(prev => ({...prev, location}));
                     document.getElementById('location').focus();
                   }}
+                  isDarkMode={isDarkMode}
                 />
               ))}
             </div>
@@ -433,7 +446,7 @@ function HotelBookingPage() {
 /**
  * HotelCard - Component to display hotel information
  */
-function HotelCard({ hotel }) {
+function HotelCard({ hotel, isDarkMode }) {
   const {
     id,
     name,
@@ -452,7 +465,7 @@ function HotelCard({ hotel }) {
   } = hotel;
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-slate-100 hover:border-indigo-100 transform hover:-translate-y-1 flex flex-col md:flex-row">
+    <div className={`${isDarkMode ? 'bg-slate-800 border-slate-700 hover:border-indigo-700' : 'bg-white border-slate-100 hover:border-indigo-100'} rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border transform hover:-translate-y-1 flex flex-col md:flex-row`}>
       <div className="md:w-1/3 h-64 md:h-auto relative">
         <img 
           src={image} 
@@ -479,13 +492,13 @@ function HotelCard({ hotel }) {
         <div>
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="text-xl font-bold text-slate-800 mb-2">{name}</h3>
-              <p className="text-slate-600 text-sm mb-3">{address}</p>
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-slate-200' : 'text-slate-800'} mb-2`}>{name}</h3>
+              <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-600'} text-sm mb-3`}>{address}</p>
             </div>
           </div>
           
           <div className="mb-4">
-            <div className="flex items-center text-sm text-slate-600 mb-2">
+            <div className={`flex items-center text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'} mb-2`}>
               <svg className="w-4 h-4 mr-1 text-indigo-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"></path>
               </svg>
@@ -494,7 +507,7 @@ function HotelCard({ hotel }) {
             
             <div className="flex flex-wrap gap-2 mb-3">
               {amenities && amenities.slice(0, 5).map((amenity, index) => (
-                <span key={index} className="inline-flex items-center bg-slate-100 text-slate-700 text-xs font-medium px-2.5 py-1 rounded-full">
+                <span key={index} className={`inline-flex items-center ${isDarkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-700'} text-xs font-medium px-2.5 py-1 rounded-full`}>
                   {amenity}
                 </span>
               ))}
@@ -565,12 +578,12 @@ function HotelCard({ hotel }) {
 /**
  * DestinationCard - Component to display a popular destination
  */
-function DestinationCard({ destination, onSelect }) {
+function DestinationCard({ destination, onSelect, isDarkMode }) {
   const { name, cityId, image, hotelCount, description } = destination;
   
   return (
     <div 
-      className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-slate-100 group cursor-pointer"
+      className={`${isDarkMode ? 'bg-slate-800 border-slate-700 hover:border-indigo-700' : 'bg-white border-slate-100 hover:border-indigo-100'} rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border group cursor-pointer`}
       onClick={() => onSelect(cityId)}
     >
       <div className="h-48 overflow-hidden">
@@ -585,8 +598,8 @@ function DestinationCard({ destination, onSelect }) {
         />
       </div>
       <div className="p-5">
-        <h3 className="text-xl font-bold text-slate-800 mb-2">{name}</h3>
-        <p className="text-slate-600 text-sm mb-3">{description}</p>
+        <h3 className={`text-xl font-bold ${isDarkMode ? 'text-slate-200' : 'text-slate-800'} mb-2`}>{name}</h3>
+        <p className={`${isDarkMode ? 'text-slate-400' : 'text-slate-600'} text-sm mb-3`}>{description}</p>
         <p className="text-indigo-600 font-medium">{hotelCount} Hotels</p>
       </div>
     </div>

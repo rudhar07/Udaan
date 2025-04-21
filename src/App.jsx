@@ -7,6 +7,7 @@ import Layout from './components/Layout.jsx';
 import FavoritesPage from './pages/FavoritesPage.jsx';
 import HotelBookingPage from './pages/HotelBookingPage.jsx';
 import { useFlightContext } from './context/FlightContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 
 
 const popularDestinations = [
@@ -120,16 +121,18 @@ function FlightResultsPage() {
  */
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="flight-results" element={<FlightResultsPage />} />
-          <Route path="favorites" element={<FavoritesPage />} />
-          <Route path="hotels" element={<HotelBookingPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<HomePage />} />
+            <Route path="flight-results" element={<FlightResultsPage />} />
+            <Route path="favorites" element={<FavoritesPage />} />
+            <Route path="hotels" element={<HotelBookingPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
