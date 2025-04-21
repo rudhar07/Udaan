@@ -21,9 +21,9 @@ export function ThemeProvider({ children }) {
     // Try to load from localStorage on init
     const savedTheme = localStorage.getItem('theme');
     
-    // If no saved preference, use system preference
+    // If no saved preference, default to light mode
     if (!savedTheme) {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+      return false; // Default to light mode
     }
     
     return savedTheme === 'dark';
