@@ -47,7 +47,6 @@ function HomePage() {
    * @param {Object} params - Search parameters
    */
   const handleSearch = (params) => {
-    // Navigate to flight results 
     const searchQueryString = new URLSearchParams({
       from: params.from,
       to: params.to,

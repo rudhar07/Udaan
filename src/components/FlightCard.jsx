@@ -11,10 +11,8 @@ const airlineLogos = {
   'GoAir': 'https://seeklogo.com/images/G/goair-airlines-logo-276810-seeklogo.com.png',
   'AirAsia': 'https://upload.wikimedia.org/wikipedia/commons/2/2b/AirAsia_New_Logo_%282020%29.svg',
   'Alliance Air': 'https://airhex.com/images/airline-logos/alliance-air.png',
-  // Add more airlines as needed
 };
 
-// Default logo for airlines not in the mapping
 const defaultLogo = '✈️';
 
 /**
@@ -28,7 +26,6 @@ function FlightCard({ flight }) {
   const { currentUser, login } = useAuth();
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
-  // Default values in case flight object is not complete
   const {
     id = `FL${Math.random().toString(36).substr(2, 9)}`,
     airline = 'Airline',
@@ -46,7 +43,6 @@ function FlightCard({ flight }) {
 
   // Generate a consistent flight number based on flight attributes but outside 1000-1009
   const flightNumber = useMemo(() => {
-    // Create a hash from flight attributes
     const hash = `${airline}${departureAirport}${arrivalAirport}${departureTime}`.split('')
       .reduce((acc, char) => acc + char.charCodeAt(0), 0);
     
@@ -54,7 +50,7 @@ function FlightCard({ flight }) {
     return 1010 + (hash % 8990);
   }, [airline, departureAirport, arrivalAirport, departureTime]);
 
-  // Check if flight is in favorites using multiple properties for more accurate matching
+  // Chk if flight is in favs using multiple properties for more accurate matching
   const isFavorite = favorites.some(fav => 
     fav.departureAirport === departureAirport && 
     fav.arrivalAirport === arrivalAirport &&
@@ -62,7 +58,6 @@ function FlightCard({ flight }) {
     fav.airline === airline
   );
 
-  // Format stops text
   const stopsText = stops === 0 
     ? 'Direct' 
     : stops === 1 
